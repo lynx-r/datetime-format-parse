@@ -1,0 +1,31 @@
+{
+  "name": "datetime-format-parse",
+  "version": "1.0.0",
+  "description": "Provides an API for formatting/parsing a datetime on a client and a server in different time zones",
+  "main": "index.ts",
+  "scripts": {
+    "start": "npx tsx ./index.ts",
+    "test": "jest",
+    "test-date": "jest __tests__/date.*",
+    "test-datetime": "jest __tests__/datetime.*"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "config": "^3.3.11",
+    "date-fns": "^2.30.0",
+    "date-fns-tz": "^2.0.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.24.0",
+    "@babel/preset-env": "^7.24.0",
+    "@babel/preset-typescript": "^7.23.3",
+    "@types/config": "^3.3.3",
+    "@types/date-fns": "^2.6.0",
+    "@types/jest": "^29.5.12",
+    "babel-jest": "^29.7.0",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.2",
+    "typescript": "^5.4.2"
+  }
+}

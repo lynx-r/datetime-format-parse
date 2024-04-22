@@ -1,0 +1,20 @@
+{
+  "timeFormatFunctions": {
+    "datetimeAtFormat": "dd.MM.yyyy 'в' HH:mm",
+    "dateFormat": "dd.MM.yyyy",
+    "date2DigitFormat": "dd.MM.yyyy HH 'sdfdg' mm"
+  },
+  "constants": {
+    "TZ_MSK": "Europe/Paris"
+  },
+  "TZ_MSK": "Europe/Moscow",
+  "DATE_2_FORMAT": "dd.MM.yy",
+  "DATE_FORMAT": "dd.MM.yyyy",
+  "DATETIME_FORMAT": "dd.MM.yyyy HH:mm",
+  "DATETIME_AT_FORMAT": "dd.MM.yyyy 'в' HH:mm",
+  "DATETIME_WITH_TZ_MSK_FORMAT": "dd.MM.yyyy HH:mm', UTC+3 (МСК)'",
+  "DATETIME_WITH_TZ_AT_MSK_FORMAT": "dd.MM.yyyy 'в' HH:mm', UTC+3 (МСК)'",
+  "SERVER_DATE_FORMAT": "yyyy-MM-dd",
+  "SERVER_DATETIME_FORMAT": "yyyy-MM-dd'T'HH:mm:ss'+03:00'",
+  "ISO_DATETIME_FORMAT": "yyyy-MM-dd'T'HH:mm:ssXXX"
+}
