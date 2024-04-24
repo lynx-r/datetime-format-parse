@@ -4,10 +4,9 @@
   "description": "Provides an API for formatting/parsing a datetime on a client and a server in different time zones",
   "main": "index.ts",
   "scripts": {
-    "start": "npx tsx ./index.ts",
     "test": "jest",
     "test-date": "jest __tests__/date.*",
-    "test-datetime": "jest __tests__/datetime.*"
+    "test-datetime": "jest __tests__/datetime.format.*"
   },
   "author": "",
   "license": "ISC",
