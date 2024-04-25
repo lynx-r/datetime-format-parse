@@ -1,26 +1,22 @@
 {
   "format": {
-    "client": {
-      "date": {
-        "format": "dd/MM/yyyy",
-        "formatWithSplitByDots": "dd.MM.yyyy",
-        "format2Digits": "dd.MM.yy"
-      },
-      "datetime": {
-        "format": "dd.MM.yyyy HH:mm",
-        "format12Hours": "dd.MM.yyyy hh:mm",
-        "formatWithSomeText": "'any prefix: 'dd.MM.yyyy HH:mm', any postfix'"
-      }
+    "formatDateInTest": "dd.MM.yyyy",
+    "format2DigitsInTest": "dd.MM.yy",
+    "formatDatetimeInTest": "dd.MM.yyyy HH:mm",
+    "formatWithSomeTextInTest": "'any prefix: 'dd.MM.yyyy HH:mm', any postfix'",
+    "formatDateToServerInTest": "yyyy-MM-dd",
+    "formatDateToServerComplementTimeInTest": {
+      "formatStr": "yyyy-MM-dd",
+      "complementTime": true
     },
-    "server": {
-      "date": {
-        "format": "yyyy-MM-dd",
-        "formatWithTime": "yyyy-MM-dd'T'HH:mm:ssXXX"
-      },
-      "datetime": {
-        "format": "yyyy-MM-dd'T'HH:mm:ssXXX"
-      }
-    }
+    "formatDatetimeToServerInTest": "yyyy-MM-dd'T'HH:mm:ssXXX",
+    "formatDatetimeToServerComplementTimeInTest": {
+      "formatStr": "yyyy-MM-dd'T'HH:mm:ssXXX",
+      "complementTime": true
+    },
+
+    "formatDatetime12Hours": "dd.MM.yyyy hh:mm",
+    "formatWithSplitBySlash": "dd/MM/yyyy"
   },
   "constants": {
     "TZ_MSK": "America/Ensenada",

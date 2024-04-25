@@ -8,20 +8,24 @@ import {
 
 import { formatInTimeZone } from "date-fns-tz/formatInTimeZone";
 import { toZonedTime } from "date-fns-tz/toZonedTime";
+import { set } from "date-fns/set";
 import {
   CREATE_INVALID_DATE as INVALID_DATE,
   ISO_DATETIME_FORMAT,
   SERVER_DATE_FORMAT,
   TZ_MSK,
   TZ_MSK_UTC_HOURS,
-  VALID_CLIENT_FORMATS,
+  VALID_FORMATS,
 } from "./constants";
-import { TInputDate } from "./types";
+import { FormatParams, ParseParams, TInputDate } from "./types";
 
 export const getTimezone = () =>
   Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-export const parseInputDate = (date: TInputDate): Date => {
+export const parseInputDate = (
+  date: TInputDate,
+  parseParams: ParseParams = { complementTime: false }
+): Date => {
   if (date === null || date === undefined) {
     return INVALID_DATE;
   }
@@ -31,7 +35,7 @@ export const parseInputDate = (date: TInputDate): Date => {
   } else if (typeof date === "number") {
     dateObject = new Date(date);
   } else if (typeof date === "string") {
-    dateObject = parseValidFormat(date);
+    dateObject = parseValidFormat(date, parseParams);
   } else {
     return INVALID_DATE;
   }
@@ -45,10 +49,23 @@ export const parseInputDate = (date: TInputDate): Date => {
   return toZonedTime(dateObject, getTimezone());
 };
 
-const parseValidFormat = (date: string): Date => {
-  const clientFormat = VALID_CLIENT_FORMATS.find((fmt) => isMatch(date, fmt));
+const parseValidFormat = (date: string, parseParams: ParseParams): Date => {
+  const clientFormat = VALID_FORMATS.find((fmt) => isMatch(date, fmt));
   if (clientFormat) {
-    return parse(date, clientFormat, new Date());
+    const { complementTime } = parseParams;
+    let parsedDate = parse(date, clientFormat, new Date());
+
+    if (complementTime) {
+      const now = new Date();
+      parsedDate = set(parsedDate, {
+        hours: now.getHours(),
+        minutes: now.getMinutes(),
+        seconds: now.getSeconds(),
+        milliseconds: now.getMilliseconds(),
+      });
+    }
+
+    return parsedDate;
   }
 
   return INVALID_DATE;
@@ -72,11 +89,21 @@ const parseDateString = (date: string): Date => {
 
 export const formatDatetimeHelper = (
   date: TInputDate,
-  format: string
+  format: FormatParams
 ): string => {
-  const dateObject = parseInputDate(date);
+  let formatStr,
+    complementTime = false;
+  if (typeof format === "object") {
+    formatStr = format.formatStr;
+    complementTime = format.complementTime;
+  } else {
+    formatStr = format;
+  }
+  const parseParams = { complementTime };
+  const dateObject = parseInputDate(date, parseParams);
+
   if (!isValid(dateObject)) {
     return "";
   }
-  return formatInTimeZone(dateObject, TZ_MSK, format);
+  return formatInTimeZone(dateObject, TZ_MSK, formatStr);
 };

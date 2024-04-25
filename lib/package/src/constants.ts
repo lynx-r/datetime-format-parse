@@ -1,6 +1,6 @@
 import config from "config";
 import { formatInTimeZone } from "date-fns-tz/formatInTimeZone";
-import { IClientFormats, IServerFormats } from "./types";
+import { Formats } from "./types";
 
 export const TZ_MSK = config.get("constants.TZ_MSK") as string;
 
@@ -12,10 +12,11 @@ export const SERVER_DATETIME_FORMAT =
   (config.get("SERVER_DATETIME_FORMAT") as string) + TZ_MSK_UTC_HOURS;
 export const ISO_DATETIME_FORMAT = config.get("ISO_DATETIME_FORMAT") as string;
 
-export const clientFormats: IClientFormats = config.get("format.client");
-export const serverFormats: IServerFormats = config.get("serverFormats");
+export const formats: Formats = config.get("format");
+export const serverFormats: any = {};
 
-export const VALID_CLIENT_FORMATS = Object.values(clientFormats);
-export const VALID_SERVER_FORMATS = Object.values(serverFormats);
+export const VALID_FORMATS = Object.values(formats).map((fmt) =>
+  typeof fmt === "object" ? fmt.formatStr : fmt
+);
 
 export const CREATE_INVALID_DATE = new Date(NaN);

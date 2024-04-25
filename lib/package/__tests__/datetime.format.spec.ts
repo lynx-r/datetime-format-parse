@@ -4,7 +4,6 @@ import { toZonedTime } from "date-fns-tz/toZonedTime";
 import { TZ_MSK } from "../src/constants";
 import { getTimezone } from "../src/date-utils";
 import formatter from "../src/formatter";
-import serverFormatter from "../src/serverFormatter";
 import { IClientFormats } from "../src/types";
 
 const functionFormats: IClientFormats = config.get("clientFormats");
