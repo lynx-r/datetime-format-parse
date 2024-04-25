@@ -1,11 +1,26 @@
 {
-  "timeFormatFunctions": {
-    "formatDate": "dd.MM.yyyy",
-    "formatDateToServer": "yyyy-MM-dd'T'HH:mm:ssXXX",
-    "formatDateWith2Digits": "dd.MM.yy",
-    "formatDatetime": "dd.MM.yyyy HH:mm",
-    "formatDatetimeInMskTz": "'any prefix: 'dd.MM.yyyy HH:mm', any postfix'",
-    "formatDatetimeToServer": "yyyy-MM-dd'T'HH:mm:ssXXX"
+  "format": {
+    "client": {
+      "date": {
+        "format": "dd/MM/yyyy",
+        "formatWithSplitByDots": "dd.MM.yyyy",
+        "format2Digits": "dd.MM.yy"
+      },
+      "datetime": {
+        "format": "dd.MM.yyyy HH:mm",
+        "format12Hours": "dd.MM.yyyy hh:mm",
+        "formatWithSomeText": "'any prefix: 'dd.MM.yyyy HH:mm', any postfix'"
+      }
+    },
+    "server": {
+      "date": {
+        "format": "yyyy-MM-dd",
+        "formatWithTime": "yyyy-MM-dd'T'HH:mm:ssXXX"
+      },
+      "datetime": {
+        "format": "yyyy-MM-dd'T'HH:mm:ssXXX"
+      }
+    }
   },
   "constants": {
     "TZ_MSK": "America/Ensenada",

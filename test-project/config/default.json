@@ -1,5 +1,5 @@
 {
-  "timeFormatFunctions": {
+  "clientFormats": {
     "datetime2AtFormat": "dd.MM.yyyy 'в' HH:mm",
     "dateFormat": "dd.MM.yyyy",
     "date2DigitFormat": "dd.MM.yyyy HH 'sdfdg' mm"

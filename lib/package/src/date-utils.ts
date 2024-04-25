@@ -6,8 +6,8 @@ import {
   parseISO,
 } from "date-fns";
 
-import formatInTimeZone from "date-fns-tz/formatInTimeZone";
-import zonedTimeToUtc from "date-fns-tz/zonedTimeToUtc";
+import { formatInTimeZone } from "date-fns-tz/formatInTimeZone";
+import { toZonedTime } from "date-fns-tz/toZonedTime";
 import {
   CREATE_INVALID_DATE as INVALID_DATE,
   ISO_DATETIME_FORMAT,
@@ -38,17 +38,17 @@ export const parseInputDate = (date: TInputDate): Date => {
   if (!isValidDate(dateObject)) {
     return INVALID_DATE;
   }
-  return zonedTimeToUtc(dateObject, getTimezone());
+  // переводим dateObject на время эквивалентное UTC. То есть если распарсилось время в 12:21, то
+  // это время переводится в UTC, как будто оно было в ЧП МСК, то есть на 3 часа назад – в 09:21.
+  // используется для установки времени (часы:минуты) при форматировании, так как там просто берется
+  // время и дата Date и форматируется в указанном ЧП, при этом ЧП Date никак не учитывается.
+  return toZonedTime(dateObject, getTimezone());
 };
 
 const parseValidFormat = (date: string): Date => {
   const clientFormat = VALID_CLIENT_FORMATS.find((fmt) => isMatch(date, fmt));
   if (clientFormat) {
     return parse(date, clientFormat, new Date());
-    // переводим dateObject на время эквивалентное UTC. То есть если распарсилось время в 12:21, то
-    // это время переводится в UTC, как будто оно было в ЧП МСК, то есть на 3 часа назад – в 09:21.
-    // используется для установки времени (часы:минуты) при форматировании, так как там просто берется
-    // время и дата Date и форматируется в указанном ЧП, при этом ЧП Date никак не учитывается.
   }
 
   return INVALID_DATE;

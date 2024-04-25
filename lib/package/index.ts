@@ -1,1 +1,1 @@
-export * from "./src/timeFormatFunctions";
+export * from "./src/formatter";

@@ -1,21 +1,24 @@
 import config from "config";
-import formatInTimeZone from "date-fns-tz/formatInTimeZone";
-import zonedTimeToUtc from "date-fns-tz/zonedTimeToUtc";
+import { formatInTimeZone } from "date-fns-tz/formatInTimeZone";
+import { toZonedTime } from "date-fns-tz/toZonedTime";
 import { TZ_MSK } from "../src/constants";
 import { getTimezone } from "../src/date-utils";
-import { funcs } from "../src/timeFormatFunctions";
-import { ITimeFormat } from "../src/types";
+import formatter from "../src/formatter";
+import serverFormatter from "../src/serverFormatter";
+import { IClientFormats } from "../src/types";
 
-const functionFormats: ITimeFormat = config.get("timeFormatFunctions");
+const functionFormats: IClientFormats = config.get("clientFormats");
 
 const getCorrectFormat = (date: string, format: string) => {
-  const zonedTime = zonedTimeToUtc(new Date(date), getTimezone());
+  const zonedTime = toZonedTime(new Date(date), getTimezone());
 
   return formatInTimeZone(zonedTime, TZ_MSK, format);
 };
 
 test("форматирование ISO строки на клиенте с 'UTC+3 (МСК)' в том же ЧП", () => {
-  const formatted = funcs.formatDatetimeInMskTz("2023-07-19T12:21:15+03:00");
+  const formatted = formatter.formatDatetimeInMskTz(
+    "2023-07-19T12:21:15+03:00"
+  );
   const correct = getCorrectFormat(
     "2023-07-19T12:21:15+03:00",
     functionFormats.formatDatetimeInMskTz
@@ -23,7 +26,7 @@ test("форматирование ISO строки на клиенте с 'UTC+
   expect(formatted).toBe(correct);
   // expect(formatted).toBe("19.07.2023 12:21, UTC+3 (МСК)"); // MSK
 
-  const inServer = funcs.formatDatetimeToServer(formatted);
+  const inServer = serverFormatter.formatDatetime(formatted);
   expect(inServer).toBe("2023-07-19T12:21:00+03:00");
 });
 
@@ -160,7 +163,7 @@ test("форматирование ISO строки на клиенте с 'UTC+
 // });
 
 test("форматирование ISO строки на клиенте", () => {
-  const formatted = funcs.formatDatetime("2023-07-19T12:21:15+03:00");
+  const formatted = formatter.formatDatetime("2023-07-19T12:21:15+03:00");
 
   const correct = getCorrectFormat(
     "2023-07-19T12:21:15+03:00",
@@ -171,7 +174,9 @@ test("форматирование ISO строки на клиенте", () => 
 });
 
 test("форматирование Date на клиенте", () => {
-  const formatted = funcs.formatDatetime(new Date("2023-07-19T12:21:15+03:00"));
+  const formatted = formatter.formatDatetime(
+    new Date("2023-07-19T12:21:15+03:00")
+  );
   const correct = getCorrectFormat(
     "2023-07-19T12:21:15+03:00",
     functionFormats.formatDatetime
@@ -181,7 +186,7 @@ test("форматирование Date на клиенте", () => {
 });
 
 test("форматирование timestamp на клиенте", () => {
-  const formatted = funcs.formatDatetime(
+  const formatted = formatter.formatDatetime(
     new Date("2023-07-19T12:21:15+03:00").getTime()
   );
   const correct = getCorrectFormat(
@@ -193,7 +198,7 @@ test("форматирование timestamp на клиенте", () => {
 });
 
 test("форматирование даты и времени на клиенте тот же день", () => {
-  const formatted = funcs.formatDatetime("2023-07-19T12:21:15+04:00");
+  const formatted = formatter.formatDatetime("2023-07-19T12:21:15+04:00");
 
   const correct = getCorrectFormat(
     "2023-07-19T12:21:15+04:00",
@@ -204,7 +209,9 @@ test("форматирование даты и времени на клиент�
 });
 
 test("форматирование Date на клиенте тот же день", () => {
-  const formatted = funcs.formatDatetime(new Date("2023-07-19T12:21:15+04:00"));
+  const formatted = formatter.formatDatetime(
+    new Date("2023-07-19T12:21:15+04:00")
+  );
   const correct = getCorrectFormat(
     "2023-07-19T12:21:15+04:00",
     functionFormats.formatDatetime
@@ -214,7 +221,7 @@ test("форматирование Date на клиенте тот же день
 });
 
 test("форматирование timestamp на клиенте тот же день", () => {
-  const formatted = funcs.formatDatetime(
+  const formatted = formatter.formatDatetime(
     new Date("2023-07-19T12:21:15+04:00").getTime()
   );
   const correct = getCorrectFormat(
@@ -226,7 +233,7 @@ test("форматирование timestamp на клиенте тот же д�
 });
 
 test("форматирование ISO строки на клиенте 1 день назад", () => {
-  const formatted = funcs.formatDatetime("2023-07-19T01:21:15+13:00");
+  const formatted = formatter.formatDatetime("2023-07-19T01:21:15+13:00");
   const correct = getCorrectFormat(
     "2023-07-19T01:21:15+13:00",
     functionFormats.formatDatetime
@@ -236,7 +243,9 @@ test("форматирование ISO строки на клиенте 1 ден
 });
 
 test("форматирование Date на клиенте 1 день назад", () => {
-  const formatted = funcs.formatDatetime(new Date("2023-07-19T01:21:15+13:00"));
+  const formatted = formatter.formatDatetime(
+    new Date("2023-07-19T01:21:15+13:00")
+  );
   const correct = getCorrectFormat(
     "2023-07-19T01:21:15+13:00",
     functionFormats.formatDatetime
@@ -245,7 +254,7 @@ test("форматирование Date на клиенте 1 день наза�
 });
 
 test("форматирование timestamp на клиенте 1 день назад", () => {
-  const formatted = funcs.formatDatetime(
+  const formatted = formatter.formatDatetime(
     new Date("2023-07-19T01:21:15+13:00").getTime()
   );
   const correct = getCorrectFormat(
@@ -256,7 +265,7 @@ test("форматирование timestamp на клиенте 1 день на
 });
 
 test("форматирование даты и времени на клиенте 1 день вперед", () => {
-  const formatted = funcs.formatDatetime("2023-07-19T22:21:15-10:00");
+  const formatted = formatter.formatDatetime("2023-07-19T22:21:15-10:00");
   const correct = getCorrectFormat(
     "2023-07-19T22:21:15-10:00",
     functionFormats.formatDatetime
@@ -266,7 +275,9 @@ test("форматирование даты и времени на клиент�
 });
 
 test("форматирование Date на клиенте 1 день вперед", () => {
-  const formatted = funcs.formatDatetime(new Date("2023-07-19T22:21:15-10:00"));
+  const formatted = formatter.formatDatetime(
+    new Date("2023-07-19T22:21:15-10:00")
+  );
   const correct = getCorrectFormat(
     "2023-07-19T22:21:15-10:00",
     functionFormats.formatDatetime
@@ -276,7 +287,7 @@ test("форматирование Date на клиенте 1 день впер�
 });
 
 test("форматирование timestamp на клиенте 1 день вперед", () => {
-  const formatted = funcs.formatDatetime(
+  const formatted = formatter.formatDatetime(
     new Date("2023-07-19T22:21:15-10:00").getTime()
   );
   const correct = getCorrectFormat(
