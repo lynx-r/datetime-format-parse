@@ -1,313 +1,58 @@
-import config from "config";
-import { formatInTimeZone } from "date-fns-tz/formatInTimeZone";
-import { toZonedTime } from "date-fns-tz/toZonedTime";
-import { TZ_MSK } from "../src/constants";
-import { getTimezone } from "../src/date-utils";
+import { INVALID_DATE, PIVOT_TZ } from "../src/constants";
 import formatter from "../src/formatter";
-import { IClientFormats } from "../src/types";
+import {
+  FUNCTION_FORMATS,
+  INVALID_DATETIME_STR,
+  INVALID_TIMESTAMP,
+  TZ_OFFSET_BY_UTC,
+} from "./constants";
+import { getCorrectFormat, getDatetimeStr } from "./utils";
 
-const functionFormats: IClientFormats = config.get("clientFormats");
+test("invalid input", () => {
+  const formattedNull = formatter.formatDatetimeInTest(null);
+  expect(formattedNull).toBe(null);
 
-const getCorrectFormat = (date: string, format: string) => {
-  const zonedTime = toZonedTime(new Date(date), getTimezone());
+  const formattedUndef = formatter.formatDatetimeInTest(undefined);
+  expect(formattedUndef).toBe(null);
 
-  return formatInTimeZone(zonedTime, TZ_MSK, format);
-};
+  const formattedInvalidStr =
+    formatter.formatDatetimeInTest(INVALID_DATETIME_STR);
+  expect(formattedInvalidStr).toBe(null);
 
-test("форматирование ISO строки на клиенте с 'UTC+3 (МСК)' в том же ЧП", () => {
-  const formatted = formatter.formatDatetimeInMskTz(
-    "2023-07-19T12:21:15+03:00"
-  );
-  const correct = getCorrectFormat(
-    "2023-07-19T12:21:15+03:00",
-    functionFormats.formatDatetimeInMskTz
-  );
-  expect(formatted).toBe(correct);
-  // expect(formatted).toBe("19.07.2023 12:21, UTC+3 (МСК)"); // MSK
+  const formattedInvalidDate = formatter.formatDatetimeInTest(INVALID_DATE);
+  expect(formattedInvalidDate).toBe(null);
 
-  const inServer = serverFormatter.formatDatetime(formatted);
-  expect(inServer).toBe("2023-07-19T12:21:00+03:00");
+  const formattedInvalidTimestamp =
+    formatter.formatDatetimeInTest(INVALID_TIMESTAMP);
+  expect(formattedInvalidTimestamp).toBe(null);
 });
 
-// test("форматирование Date на клиенте с 'UTC+3 (МСК)' в том же ЧП", () => {
-//   const formatted = formatDatetimeInMskTz(
-//     new Date("2023-07-19T12:21:15+03:00")
-//   );
-//   expect(formatted).toBe("19.07.2023 12:21, UTC+3 (МСК)");
+test("format datetime from server to client and vice versa", () => {
+  for (const offset of TZ_OFFSET_BY_UTC) {
+    const datetimeStr = getDatetimeStr(offset);
+    const datetimeDate = new Date(datetimeStr);
+    const datetimeTimestamp = datetimeDate.getTime();
 
-//   const inServer = formatDatetimeToServer(formatted);
-//   expect(inServer).toBe("2023-07-19T12:21:00+03:00");
-// });
+    const formatted = formatter.formatDatetimeInTest(datetimeStr);
+    const formatted2 = formatter.formatDatetimeInTest(datetimeDate);
+    const formatted3 = formatter.formatDatetimeInTest(datetimeTimestamp);
+    expect(formatted).not.toBeNull();
+    expect(formatted).toEqual(formatted2);
+    expect(formatted).toEqual(formatted3);
+    const correct = getCorrectFormat(
+      datetimeStr,
+      FUNCTION_FORMATS.formatDatetimeInTest
+    );
+    expect(formatted).toBe(correct);
 
-// test("форматирование timestamp на клиенте с 'UTC+3 (МСК)' в том же ЧП", () => {
-//   const formatted = formatDatetimeInMskTz(
-//     new Date("2023-07-19T12:21:15+03:00").getTime()
-//   );
-//   expect(formatted).toBe("19.07.2023 12:21, UTC+3 (МСК)");
-
-//   const inServer = formatDatetimeToServer(formatted);
-//   expect(inServer).toBe("2023-07-19T12:21:00+03:00");
-// });
-
-// test("форматирование ISO строки на клиенте с 'UTC+3 (МСК)' не МСК тот же день", () => {
-//   const formatted = formatDatetimeInMskTz("2023-07-19T12:21:15+04:00");
-//   expect(formatted).toBe("19.07.2023 11:21, UTC+3 (МСК)");
-
-//   const inServer = formatDatetimeToServer(formatted);
-//   expect(inServer).toBe("2023-07-19T11:21:00+03:00");
-// });
-
-// test("форматирование Date на клиенте с 'UTC+3 (МСК)' не МСК тот же день", () => {
-//   const formatted = formatDatetimeInMskTz(
-//     new Date("2023-07-19T12:21:15+04:00")
-//   );
-//   expect(formatted).toBe("19.07.2023 11:21, UTC+3 (МСК)");
-
-//   const inServer = formatDatetimeToServer(formatted);
-//   expect(inServer).toBe("2023-07-19T11:21:00+03:00");
-// });
-
-// test("форматирование timestamp на клиенте с 'UTC+3 (МСК)' не МСК тот же день", () => {
-//   const formatted = formatDatetimeInMskTz(
-//     new Date("2023-07-19T12:21:15+04:00").getTime()
-//   );
-//   expect(formatted).toBe("19.07.2023 11:21, UTC+3 (МСК)");
-
-//   const inServer = formatDatetimeToServer(formatted);
-//   expect(inServer).toBe("2023-07-19T11:21:00+03:00");
-// });
-
-// test("форматирование ISO строки на клиенте с 'UTC+3 (МСК)' 1 день назад", () => {
-//   const formatted = formatDatetimeInMskTz("2023-07-19T01:21:15+13:00");
-//   expect(formatted).toBe("18.07.2023 15:21, UTC+3 (МСК)");
-
-//   const inServer = formatDatetimeToServer(formatted);
-//   expect(inServer).toBe("2023-07-18T15:21:00+03:00");
-// });
-
-// test("форматирование Date на клиенте с 'UTC+3 (МСК)' 1 день назад", () => {
-//   const formatted = formatDatetimeInMskTz(
-//     new Date("2023-07-19T01:21:15+13:00")
-//   );
-//   expect(formatted).toBe("18.07.2023 15:21, UTC+3 (МСК)");
-
-//   const inServer = formatDatetimeToServer(formatted);
-//   expect(inServer).toBe("2023-07-18T15:21:00+03:00");
-// });
-
-// test("форматирование timestamp на клиенте с 'UTC+3 (МСК)' 1 день назад", () => {
-//   const formatted = formatDatetimeInMskTz(
-//     new Date("2023-07-19T01:21:15+13:00").getTime()
-//   );
-//   expect(formatted).toBe("18.07.2023 15:21, UTC+3 (МСК)");
-
-//   const inServer = formatDatetimeToServer(formatted);
-//   expect(inServer).toBe("2023-07-18T15:21:00+03:00");
-// });
-
-// test("форматирование ISO строки на клиенте с 'UTC+3 (МСК)' 1 день вперед", () => {
-//   const formatted = formatDatetimeInMskTz("2023-07-19T22:21:15-10:00");
-//   expect(formatted).toBe("20.07.2023 11:21, UTC+3 (МСК)");
-
-//   const inServer = formatDatetimeToServer(formatted);
-//   expect(inServer).toBe("2023-07-20T11:21:00+03:00");
-// });
-
-// test("форматирование Date на клиенте с 'UTC+3 (МСК)' 1 день вперед", () => {
-//   const formatted = formatDatetimeInMskTz(
-//     new Date("2023-07-19T22:21:15-10:00")
-//   );
-//   expect(formatted).toBe("20.07.2023 11:21, UTC+3 (МСК)");
-
-//   const inServer = formatDatetimeToServer(formatted);
-//   expect(inServer).toBe("2023-07-20T11:21:00+03:00");
-// });
-
-// test("форматирование timestamp на клиенте с 'UTC+3 (МСК)' 1 день вперед", () => {
-//   const formatted = formatDatetimeInMskTz(
-//     new Date("2023-07-19T22:21:15-10:00").getTime()
-//   );
-//   expect(formatted).toBe("20.07.2023 11:21, UTC+3 (МСК)");
-
-//   const inServer = formatDatetimeToServer(formatted);
-//   expect(inServer).toBe("2023-07-20T11:21:00+03:00");
-// });
-
-// test("форматирование ISO строки  на клиенте с 'UTC+3 (МСК)' с 'в'", () => {
-//   const formatted = formatDatetimeAtInMskTz("2023-07-19T12:21:15+03:00");
-//   expect(formatted).toBe("19.07.2023 в 12:21, UTC+3 (МСК)");
-
-//   const inServer = formatDatetimeToServer(formatted);
-//   expect(inServer).toBe("2023-07-19T12:21:00+03:00");
-// });
-
-// test("форматирование Date на клиенте с 'UTC+3 (МСК)' с 'в'", () => {
-//   const formatted = formatDatetimeAtInMskTz(
-//     new Date("2023-07-19T12:21:15+03:00")
-//   );
-//   expect(formatted).toBe("19.07.2023 в 12:21, UTC+3 (МСК)");
-
-//   const inServer = formatDatetimeToServer(formatted);
-//   expect(inServer).toBe("2023-07-19T12:21:00+03:00");
-// });
-
-// test("форматирование timestamp на клиенте с 'UTC+3 (МСК)' с 'в'", () => {
-//   const formatted = formatDatetimeAtInMskTz(
-//     new Date("2023-07-19T12:21:15+03:00").getTime()
-//   );
-//   expect(formatted).toBe("19.07.2023 в 12:21, UTC+3 (МСК)");
-
-//   const inServer = formatDatetimeToServer(formatted);
-//   expect(inServer).toBe("2023-07-19T12:21:00+03:00");
-// });
-
-test("форматирование ISO строки на клиенте", () => {
-  const formatted = formatter.formatDatetime("2023-07-19T12:21:15+03:00");
-
-  const correct = getCorrectFormat(
-    "2023-07-19T12:21:15+03:00",
-    functionFormats.formatDatetime
-  );
-  expect(formatted).toBe(correct);
-  // expect(formatted).toBe("19.07.2023 12:21"); // MSK
+    const serverFormatInPivotTz =
+      formatter.formatDatetimeToServerInTest(formatted);
+    const inClientTz = getCorrectFormat(datetimeStr);
+    const correctInPivotTz = getCorrectFormat(
+      inClientTz,
+      FUNCTION_FORMATS.formatDatetimeToServerInTest,
+      PIVOT_TZ
+    );
+    expect(serverFormatInPivotTz).toBe(correctInPivotTz);
+  }
 });
-
-test("форматирование Date на клиенте", () => {
-  const formatted = formatter.formatDatetime(
-    new Date("2023-07-19T12:21:15+03:00")
-  );
-  const correct = getCorrectFormat(
-    "2023-07-19T12:21:15+03:00",
-    functionFormats.formatDatetime
-  );
-  expect(formatted).toBe(correct);
-  // expect(formatted).toBe("19.07.2023 12:21"); // MSK
-});
-
-test("форматирование timestamp на клиенте", () => {
-  const formatted = formatter.formatDatetime(
-    new Date("2023-07-19T12:21:15+03:00").getTime()
-  );
-  const correct = getCorrectFormat(
-    "2023-07-19T12:21:15+03:00",
-    functionFormats.formatDatetime
-  );
-  expect(formatted).toBe(correct);
-  // expect(formatted).toBe("19.07.2023 12:21"); // MSK
-});
-
-test("форматирование даты и времени на клиенте тот же день", () => {
-  const formatted = formatter.formatDatetime("2023-07-19T12:21:15+04:00");
-
-  const correct = getCorrectFormat(
-    "2023-07-19T12:21:15+04:00",
-    functionFormats.formatDatetime
-  );
-  expect(formatted).toBe(correct);
-  // expect(formatted).toBe("19.07.2023 11:21"); // MSK
-});
-
-test("форматирование Date на клиенте тот же день", () => {
-  const formatted = formatter.formatDatetime(
-    new Date("2023-07-19T12:21:15+04:00")
-  );
-  const correct = getCorrectFormat(
-    "2023-07-19T12:21:15+04:00",
-    functionFormats.formatDatetime
-  );
-  expect(formatted).toBe(correct);
-  // expect(formatted).toBe("19.07.2023 11:21"); // MSK
-});
-
-test("форматирование timestamp на клиенте тот же день", () => {
-  const formatted = formatter.formatDatetime(
-    new Date("2023-07-19T12:21:15+04:00").getTime()
-  );
-  const correct = getCorrectFormat(
-    "2023-07-19T12:21:15+04:00",
-    functionFormats.formatDatetime
-  );
-  expect(formatted).toBe(correct);
-  // expect(formatted).toBe("19.07.2023 11:21"); // MSK
-});
-
-test("форматирование ISO строки на клиенте 1 день назад", () => {
-  const formatted = formatter.formatDatetime("2023-07-19T01:21:15+13:00");
-  const correct = getCorrectFormat(
-    "2023-07-19T01:21:15+13:00",
-    functionFormats.formatDatetime
-  );
-  expect(formatted).toBe(correct);
-  // expect(formatted).toBe("18.07.2023 15:21"); // MSK
-});
-
-test("форматирование Date на клиенте 1 день назад", () => {
-  const formatted = formatter.formatDatetime(
-    new Date("2023-07-19T01:21:15+13:00")
-  );
-  const correct = getCorrectFormat(
-    "2023-07-19T01:21:15+13:00",
-    functionFormats.formatDatetime
-  );
-  expect(formatted).toBe(correct);
-});
-
-test("форматирование timestamp на клиенте 1 день назад", () => {
-  const formatted = formatter.formatDatetime(
-    new Date("2023-07-19T01:21:15+13:00").getTime()
-  );
-  const correct = getCorrectFormat(
-    "2023-07-19T01:21:15+13:00",
-    functionFormats.formatDatetime
-  );
-  expect(formatted).toBe(correct);
-});
-
-test("форматирование даты и времени на клиенте 1 день вперед", () => {
-  const formatted = formatter.formatDatetime("2023-07-19T22:21:15-10:00");
-  const correct = getCorrectFormat(
-    "2023-07-19T22:21:15-10:00",
-    functionFormats.formatDatetime
-  );
-  expect(formatted).toBe(correct);
-  // expect(formatted).toBe("20.07.2023 11:21"); // MSK
-});
-
-test("форматирование Date на клиенте 1 день вперед", () => {
-  const formatted = formatter.formatDatetime(
-    new Date("2023-07-19T22:21:15-10:00")
-  );
-  const correct = getCorrectFormat(
-    "2023-07-19T22:21:15-10:00",
-    functionFormats.formatDatetime
-  );
-  expect(formatted).toBe(correct);
-  // expect(formatted).toBe("20.07.2023 11:21"); // MSK
-});
-
-test("форматирование timestamp на клиенте 1 день вперед", () => {
-  const formatted = formatter.formatDatetime(
-    new Date("2023-07-19T22:21:15-10:00").getTime()
-  );
-  const correct = getCorrectFormat(
-    "2023-07-19T22:21:15-10:00",
-    functionFormats.formatDatetime
-  );
-  expect(formatted).toBe(correct);
-  // expect(formatted).toBe("20.07.2023 11:21"); // MSK
-});
-
-// test("форматирование ISO строки для сервере", () => {
-//   const formatted = formatDatetimeToServer("19.07.2023 12:21");
-//   expect(formatted).toBe("2023-07-19T12:21:00+03:00");
-// });
-
-// test("форматирование ISO строки для сервера с 'UTC+3 (МСК)'", () => {
-//   const formatted = formatDatetimeToServer("19.07.2023 12:21, UTC+3 (МСК)");
-//   expect(formatted).toBe("2023-07-19T12:21:00+03:00");
-// });
-
-// test("форматирование ISO строки для сервера с 'UTC+3 (МСК)' с 'в'", () => {
-//   const formatted = formatDatetimeToServer("19.07.2023 в 12:21, UTC+3 (МСК)");
-//   expect(formatted).toBe("2023-07-19T12:21:00+03:00");
-// });

@@ -1,6 +1,6 @@
 import schema from "../../../config/default.json";
 
-export type TInputDate = Date | string | number | null | undefined;
+export type InputDate = Date | string | number | BigInt | null | undefined;
 
 export type FormatParams =
   | string
@@ -13,7 +13,7 @@ export type Format = Record<string, FormatParams>;
 export type Formats = (typeof schema)["format"];
 
 type BaseFormatter<T> = {
-  [k in keyof T]: (datetime: TInputDate) => string;
+  [k in keyof T]: (datetime: InputDate) => string;
 };
 
 export type Formatter = BaseFormatter<Formats>;

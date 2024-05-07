@@ -1,29 +1,19 @@
-import {
-  isMatch,
-  isValid,
-  isValid as isValidDate,
-  parse,
-  parseISO,
-} from "date-fns";
+import { isMatch, isValid, isValid as isValidDate, parse } from "date-fns";
 
 import { formatInTimeZone } from "date-fns-tz/formatInTimeZone";
 import { toZonedTime } from "date-fns-tz/toZonedTime";
 import { set } from "date-fns/set";
-import {
-  CREATE_INVALID_DATE as INVALID_DATE,
-  ISO_DATETIME_FORMAT,
-  SERVER_DATE_FORMAT,
-  TZ_MSK,
-  TZ_MSK_UTC_HOURS,
-  VALID_FORMATS,
-} from "./constants";
-import { FormatParams, ParseParams, TInputDate } from "./types";
+import { INVALID_DATE, PIVOT_TZ, VALID_FORMATS } from "./constants";
+import { FormatParams, InputDate, ParseParams } from "./types";
 
+/**
+ * @return a timezone of a current client
+ */
 export const getTimezone = () =>
   Intl.DateTimeFormat().resolvedOptions().timeZone;
 
 export const parseInputDate = (
-  date: TInputDate,
+  date: InputDate,
   parseParams: ParseParams = { complementTime: false }
 ): Date => {
   if (date === null || date === undefined) {
@@ -76,21 +66,21 @@ const parseDateString = (date: string): Date => {
   //   console.log(isMatch(date, fmt));
   // }
 
-  if (isMatch(date, SERVER_DATE_FORMAT)) {
-    date += `T00:00:00${TZ_MSK_UTC_HOURS}`;
-  }
+  // if (isMatch(date, SERVER_DATE_FORMAT)) {
+  //   date += `T00:00:00${PIVOT_TZ_UTC_HOURS}`;
+  // }
 
-  if (isMatch(date, ISO_DATETIME_FORMAT)) {
-    return parseISO(date);
-  }
+  // if (isMatch(date, ISO_DATETIME_FORMAT)) {
+  //   return parseISO(date);
+  // }
 
   return INVALID_DATE;
 };
 
 export const formatDatetimeHelper = (
-  date: TInputDate,
+  date: InputDate,
   format: FormatParams
-): string => {
+): string | null => {
   let formatStr,
     complementTime = false;
   if (typeof format === "object") {
@@ -103,7 +93,7 @@ export const formatDatetimeHelper = (
   const dateObject = parseInputDate(date, parseParams);
 
   if (!isValid(dateObject)) {
-    return "";
+    return null;
   }
-  return formatInTimeZone(dateObject, TZ_MSK, formatStr);
+  return formatInTimeZone(dateObject, PIVOT_TZ, formatStr);
 };

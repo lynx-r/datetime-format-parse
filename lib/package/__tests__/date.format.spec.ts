@@ -1,72 +1,92 @@
+import { INVALID_DATE, PIVOT_TZ } from "../src/constants";
 import formatter from "../src/formatter";
+import {
+  FUNCTION_FORMATS,
+  INVALID_DATETIME_STR,
+  INVALID_TIMESTAMP,
+  TZ_OFFSET_BY_UTC,
+} from "./constants";
+import {
+  getCorrectFormat,
+  getDatetimeStr,
+  getDatetimeWithCurrentTimeStr,
+} from "./utils";
 
-test("форматирование ISO строки на клиенте", () => {
-  const formatted = formatter.formatDateInTest("2023-07-19T12:21:15+03:00");
-  expect(formatted).toBe("19.07.2023");
+test("invalid input", () => {
+  const formattedNull = formatter.formatDateInTest(null);
+  expect(formattedNull).toBe(null);
 
-  const inServer = formatter.formatDateToServerInTest(formatted);
-  expect(inServer).toBe("2023-07-18");
+  const formattedUndef = formatter.formatDateInTest(undefined);
+  expect(formattedUndef).toBe(null);
 
-  const inServerComplementTime =
-    formatter.formatDateToServerComplementTimeInTest(formatted);
-  expect(inServerComplementTime).toBe("2023-07-19");
+  const formattedInvalidStr = formatter.formatDateInTest(INVALID_DATETIME_STR);
+  expect(formattedInvalidStr).toBe(null);
+
+  const formattedInvalidDate = formatter.formatDateInTest(INVALID_DATE);
+  expect(formattedInvalidDate).toBe(null);
+
+  const formattedInvalidTimestamp =
+    formatter.formatDateInTest(INVALID_TIMESTAMP);
+  expect(formattedInvalidTimestamp).toBe(null);
 });
 
-// test("форматирование ISO строки на клиенте тот же день", () => {
-//   const formatted = formatter.format("2023-07-19T12:21:15+04:00");
-//   expect(formatted).toBe("19.07.2023");
+for (const offset of TZ_OFFSET_BY_UTC) {
+  test(`format date with offset: ${offset} from server to client and vice versa`, () => {
+    const datetimeStr = getDatetimeStr(offset);
+    const datetimeDate = new Date(datetimeStr);
+    const datetimeTimestamp = datetimeDate.getTime();
 
-//   const inServer = formatter.formatToServer(formatted);
-//   expect(inServer).toBe(`2023-07-19T00:00:00${TZ_MSK_UTC_HOURS}`);
-// });
+    const formatted = formatter.formatDateInTest(datetimeStr);
+    const formatted2 = formatter.formatDateInTest(datetimeDate);
+    const formatted3 = formatter.formatDateInTest(datetimeTimestamp);
+    expect(formatted).not.toBeNull();
+    expect(formatted).toEqual(formatted2);
+    expect(formatted).toEqual(formatted3);
+    const correct = getCorrectFormat(
+      datetimeStr,
+      FUNCTION_FORMATS.formatDateInTest
+    );
+    expect(formatted).toBe(correct);
 
-// test("форматирование ISO строки на клиенте 1 день назад", () => {
-//   const formatted = formatter.format("2023-07-19T01:21:15+13:00");
-//   expect(formatted).toBe("18.07.2023");
+    const serverFormatInPivotTz =
+      formatter.formatDateToServerComplementTimeInTest(formatted);
+    const inClientTz = getCorrectFormat(getDatetimeWithCurrentTimeStr(offset));
+    const correctInPivotTz = getCorrectFormat(
+      inClientTz,
+      FUNCTION_FORMATS.formatDateToServerComplementTimeInTest.formatStr,
+      PIVOT_TZ
+    );
+    expect(serverFormatInPivotTz).toBe(correctInPivotTz);
+  });
+}
 
-//   const inServer = formatter.format(formatted);
-//   expect(inServer).toBe(`2023-07-18T00:00:00${TZ_MSK_UTC_HOURS}`);
-// });
+// for (const offset of TZ_OFFSET_BY_UTC) {
+//   test(`format date with offset: ${offset} from server to client and vice versa`, () => {
+//     const datetimeStr = getDatetimeStr(offset);
+//     const datetimeDate = new Date(datetimeStr);
+//     const datetimeTimestamp = datetimeDate.getTime();
 
-// test("форматирование ISO строки на клиенте 1 день вперед", () => {
-//   const formatted = formatter.format("2023-07-19T22:21:15-10:00");
-//   expect(formatted).toBe("20.07.2023");
+//     const formatted = formatter.formatDateInTest(datetimeStr);
+//     const formatted2 = formatter.formatDateInTest(datetimeDate);
+//     const formatted3 = formatter.formatDateInTest(datetimeTimestamp);
+//     expect(formatted).not.toBeNull();
+//     expect(formatted).toEqual(formatted2);
+//     expect(formatted).toEqual(formatted3);
+//     const correct = getCorrectFormat(
+//       datetimeStr,
+//       FUNCTION_FORMATS.formatDateInTest
+//     );
+//     expect(formatted).toBe(correct);
 
-//   const inServer = formatter.format(formatted);
-//   expect(inServer).toBe(`2023-07-20T00:00:00${TZ_MSK_UTC_HOURS}`);
-// });
-
-// test("форматирование ISO строки сервера без времени", () => {
-//   const formatted = formatter.format("2023-07-19");
-//   expect(formatted).toBe("19.07.2023");
-
-//   const inServer = formatter.format(formatted);
-//   expect(inServer).toBe(`2023-07-19T00:00:00${TZ_MSK_UTC_HOURS}`);
-// });
-
-// test("форматирование даты и времени для сервере", () => {
-//   const formatted = formatter.format("19.07.2023 12:21");
-//   expect(formatted).toBe(`2023-07-19T12:21:00${TZ_MSK_UTC_HOURS}`);
-// });
-
-// test("форматирование даты и времени с 'UTC+3 (МСК)' для сервера ", () => {
-//   const formatted = formatter.format(
-//     "any prefix: 19.07.2023 12:21, any postfix"
-//   );
-//   expect(formatted).toBe(`2023-07-19T12:21:00${TZ_MSK_UTC_HOURS}`);
-// });
-
-// test("форматирование даты и времени с 'UTC+3 (МСК)' с 'в' для сервера", () => {
-//   const formatted = formatter.format(
-//     "any prefix: 19.07.2023 custom middle 12:21, any postfix"
-//   );
-//   expect(formatted).toBe(`2023-07-19T12:21:00${TZ_MSK_UTC_HOURS}`);
-// });
-
-// test("форматирование даты на клиенте с 2 цифрами года", () => {
-//   const formatted = formatter.format("2023-07-19T12:21:15+03:00");
-//   expect(formatted).toBe("19.07.23");
-
-//   const inServer = formatter.format(formatted);
-//   expect(inServer).toBe(`2023-07-19T00:00:00${TZ_MSK_UTC_HOURS}`);
-// });
+//     const serverFormatInPivotTz = formatter.formatDateToServerInTest(formatted);
+//     const inClientTz = getCorrectFormat(
+//       getDatetimeMidnightTimeStr(datetimeStr)
+//     );
+//     const correctInPivotTz = getCorrectFormat(
+//       inClientTz,
+//       FUNCTION_FORMATS.formatDateToServerComplementTimeInTest.formatStr,
+//       PIVOT_TZ
+//     );
+//     expect(serverFormatInPivotTz).toBe(correctInPivotTz);
+//   });
+// }

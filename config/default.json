@@ -2,14 +2,14 @@
   "format": {
     "formatDateInTest": "dd.MM.yyyy",
     "format2DigitsInTest": "dd.MM.yy",
-    "formatDatetimeInTest": "dd.MM.yyyy HH:mm",
+    "formatDatetimeInTest": "dd/MM\\yyyy HH:mm 'sdfdsg'",
     "formatWithSomeTextInTest": "'any prefix: 'dd.MM.yyyy HH:mm', any postfix'",
     "formatDateToServerInTest": "yyyy-MM-dd",
     "formatDateToServerComplementTimeInTest": {
       "formatStr": "yyyy-MM-dd",
       "complementTime": true
     },
-    "formatDatetimeToServerInTest": "yyyy-MM-dd'T'HH:mm:ssXXX",
+    "formatDatetimeToServerInTest": "yyyy-MM-dd'T  'HH:mm:ssXXX '///'",
     "formatDatetimeToServerComplementTimeInTest": {
       "formatStr": "yyyy-MM-dd'T'HH:mm:ssXXX",
       "complementTime": true
@@ -19,17 +19,8 @@
     "formatWithSplitBySlash": "dd/MM/yyyy"
   },
   "constants": {
-    "TZ_MSK": "America/Ensenada",
-    "TZ_MSK-10": "America/Ensenada",
-    "TZ_MSK+3": "Europe/Moscow"
-  },
-  "DATE_2_FORMAT": "dd.MM.yy",
-  "DATE_FORMAT": "dd.MM.yyyy",
-  "DATETIME_FORMAT": "dd.MM.yyyy HH:mm",
-  "DATETIME_WITH_TZ_MSK_FORMAT": "'any prefix: 'dd.MM.yyyy HH:mm', any postfix'",
-  "DATETIME_AT_FORMAT": "dd.MM.yyyy 'à' HH:mm",
-  "DATETIME_WITH_TZ_AT_MSK_FORMAT": "'any prefix: 'dd.MM.yyyy 'custom middle' HH:mm', any postfix",
-  "SERVER_DATETIME_FORMAT": "yyyy-MM-dd'T'HH:mm:ss",
-  "SERVER_DATE_FORMAT": "yyyy-MM-dd",
-  "ISO_DATETIME_FORMAT": "yyyy-MM-dd'T'HH:mm:ssXXX"
+    "PIVOT_TZ": "Asia/Kolkata",
+    "PIVOT_TZ-10": "America/Ensenada",
+    "PIVOT_TZ+3": "Europe/Moscow"
+  }
 }

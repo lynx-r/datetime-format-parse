@@ -1,6 +1,5 @@
-import { isMatch, isValid } from "date-fns";
+import { isValid } from "date-fns";
 
-import { SERVER_DATETIME_FORMAT } from "./constants";
 import { parseInputDate } from "./date-utils";
 
 // /**
@@ -92,9 +91,10 @@ export const parseDatetime = (datetime: string): Date => {
  */
 export const isValidDatetime = (datetime: string): boolean => {
   // серверную дату пропускаем только в ЧП МСК
-  if (isMatch(datetime, SERVER_DATETIME_FORMAT)) {
-    return true;
-  }
+  // todo
+  // if (isMatch(datetime, SERVER_DATETIME_FORMAT)) {
+  //   return true;
+  // }
   const dateObject = parseInputDate(datetime);
   return isValid(dateObject);
 };
