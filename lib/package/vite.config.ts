@@ -7,7 +7,5 @@ export default defineConfig({
       name: "DatetimeFormatter",
       fileName: "datetime-format-parse",
     },
-    outDir: "../../test-datetime-vue/lib/dist",
-    emptyOutDir: true,
   },
 });

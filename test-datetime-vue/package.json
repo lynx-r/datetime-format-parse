@@ -8,11 +8,11 @@
     "build": "vue-tsc -b && vite build",
     "build-ignore-errs": "vite build",
     "preview": "vite preview",
-    "install-datetime-format-parse": "npm i ./lib",
-    "link-datetime-format-parse": "npm link ./lib"
+    "install-datetime-format-parse": "npm i ./lib/dist",
+    "link-datetime-format-parse": "npm link ./lib/dist"
   },
   "dependencies": {
-    "datetime-format-parse": "file:./lib",
+    "datetime-format-parse": "file:../lib/package",
     "vue": "^3.4.35"
   },
   "devDependencies": {
