@@ -3,6 +3,7 @@
     "formatDateInTest": "dd.MM.yyyy",
     "format2DigitsInTest": "dd.MM.yy",
     "formatDatetimeInTest": "dd/MM\\yyyy HH:mm 'sdfdsg'",
+    "formatDatetimeInTest1111": "dd/MM\\yyyy HH:mm '111'",
     "formatWithSomeTextInTest": "'any prefix: 'dd.MM.yyyy HH:mm', any postfix'",
     "formatDateToServerInTest": "yyyy-MM-dd",
     "formatDateToServerComplementTimeInTest": {

@@ -2,8 +2,8 @@ import { format } from "date-fns-tz/format";
 import { formatInTimeZone } from "date-fns-tz/formatInTimeZone";
 import { toZonedTime } from "date-fns-tz/toZonedTime";
 import { set } from "date-fns/set";
-import { PIVOT_TZ } from "../src/constants";
-import { getTimezone } from "../src/date-utils";
+import { getTimezone } from "../lib/date-utils";
+import { getPivotTz } from "../lib/helpers";
 import {
   DATETIME_STR,
   DATETIME_STR_MIDNIGHT,
@@ -22,7 +22,7 @@ export const getCorrectFormat = (
 ) => {
   const zonedTime = toZonedTime(new Date(date), tz);
 
-  return formatInTimeZone(zonedTime, PIVOT_TZ, format);
+  return formatInTimeZone(zonedTime, getPivotTz(), format);
 };
 
 export const getDatetimeStr = (offset: string) => `${DATETIME_STR}${offset}`;

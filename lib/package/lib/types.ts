@@ -1,5 +1,3 @@
-import schema from "../../../config/default.json";
-
 export type InputDate = Date | string | number | BigInt | null | undefined;
 
 export type FormatParams =
@@ -10,10 +8,17 @@ export type ParseParams = { complementTime: boolean };
 
 export type Format = Record<string, FormatParams>;
 
-export type Formats = (typeof schema)["format"];
+export type Config = {
+  format: Format;
+  constants: {
+    TZ: string;
+  };
+};
 
-type BaseFormatter<T> = {
+export type Formatter<T extends Format> = {
   [k in keyof T]: (datetime: InputDate) => string;
 };
 
-export type Formatter = BaseFormatter<Formats>;
+export interface CreateFormatterFn {
+  <T extends Config>(config: T): Formatter<T["format"]>;
+}

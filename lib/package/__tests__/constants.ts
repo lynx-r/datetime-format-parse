@@ -1,26 +1,27 @@
-import config from "config";
-import { Formats } from "../src/types";
+import * as config from "../config/default.json";
+export { config };
 
 export const TZ_OFFSET_BY_UTC = [
+  "Z",
   "-12:00",
-  // "-11:00",
-  // "-10:30",
-  // "-10:00",
-  // "-09:30",
-  // "-09:00",
-  // "-08:30",
-  // "-08:00",
-  // "-07:00",
-  // "-06:00",
-  // "-05:00",
-  // "-04:30",
-  // "-04:00",
-  // "-03:30",
-  // "-03:00",
-  // "-02:30",
-  // "-02:00",
-  // "-01:00",
-  // "-00:44",
+  "-11:00",
+  "-10:30",
+  "-10:00",
+  "-09:30",
+  "-09:00",
+  "-08:30",
+  "-08:00",
+  "-07:00",
+  "-06:00",
+  "-05:00",
+  "-04:30",
+  "-04:00",
+  "-03:30",
+  "-03:00",
+  "-02:30",
+  "-02:00",
+  "-01:00",
+  "-00:44",
   // // "-00:25:21", // ???
   // "+00:00",
   // "+00:20",
@@ -61,7 +62,7 @@ export const TZ_OFFSET_BY_UTC = [
   // "+14:00",
 ];
 
-export const FUNCTION_FORMATS: Formats = config.get("format");
+export const FUNCTION_FORMATS = config["format"];
 
 export const ISO_DATETIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX";
 

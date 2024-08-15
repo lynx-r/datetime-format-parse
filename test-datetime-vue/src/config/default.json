@@ -3,6 +3,7 @@
     "formatDateInTest": "dd.MM.yyyy",
     "format2DigitsInTest": "dd.MM.yy",
     "formatDatetimeInTest": "dd/MM\\yyyy HH:mm 'sdfdsg'",
+    "formatDatetimeInTest2222": "dd/MM\\yyyy HH:mm 'sdfds222222????'",
     "formatWithSomeTextInTest": "'any prefix: 'dd.MM.yyyy HH:mm', any postfix'",
     "formatDateToServerInTest": "yyyy-MM-dd",
     "formatDateToServerComplementTimeInTest": {
@@ -19,8 +20,8 @@
     "formatWithSplitBySlash": "dd/MM/yyyy"
   },
   "constants": {
-    "PIVOT_TZ": "Asia/Kolkata",
-    "PIVOT_TZ-10": "America/Ensenada",
-    "PIVOT_TZ+3": "Europe/Moscow"
+    "TZ": "Europe/Moscow",
+    "TZ-10": "America/Ensenada",
+    "TZ+3": "Europe/Moscow"
   }
 }
