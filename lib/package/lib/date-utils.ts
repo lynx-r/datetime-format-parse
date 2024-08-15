@@ -3,7 +3,8 @@ import { isMatch, isValid, isValid as isValidDate, parse } from "date-fns";
 import { formatInTimeZone } from "date-fns-tz/formatInTimeZone";
 import { toZonedTime } from "date-fns-tz/toZonedTime";
 import { set } from "date-fns/set";
-import { INVALID_DATE, PIVOT_TZ, VALID_FORMATS } from "./constants";
+import { INVALID_DATE } from "./constants";
+import { getPivotTz, getValidFormats } from "./helpers";
 import { FormatParams, InputDate, ParseParams } from "./types";
 
 /**
@@ -40,7 +41,7 @@ export const parseInputDate = (
 };
 
 const parseValidFormat = (date: string, parseParams: ParseParams): Date => {
-  const clientFormat = VALID_FORMATS.find((fmt) => isMatch(date, fmt));
+  const clientFormat = getValidFormats().find((fmt) => isMatch(date, fmt));
   if (clientFormat) {
     const { complementTime } = parseParams;
     let parsedDate = parse(date, clientFormat, new Date());
@@ -57,22 +58,6 @@ const parseValidFormat = (date: string, parseParams: ParseParams): Date => {
 
     return parsedDate;
   }
-
-  return INVALID_DATE;
-};
-
-const parseDateString = (date: string): Date => {
-  // for (let fmt of VALID_CLIENT_FORMATS) {
-  //   console.log(isMatch(date, fmt));
-  // }
-
-  // if (isMatch(date, SERVER_DATE_FORMAT)) {
-  //   date += `T00:00:00${PIVOT_TZ_UTC_HOURS}`;
-  // }
-
-  // if (isMatch(date, ISO_DATETIME_FORMAT)) {
-  //   return parseISO(date);
-  // }
 
   return INVALID_DATE;
 };
@@ -95,5 +80,6 @@ export const formatDatetimeHelper = (
   if (!isValid(dateObject)) {
     return null;
   }
-  return formatInTimeZone(dateObject, PIVOT_TZ, formatStr);
+  const pivotTz = getPivotTz();
+  return formatInTimeZone(dateObject, pivotTz, formatStr);
 };
