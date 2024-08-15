@@ -20,6 +20,10 @@ concurrency:
   group: "pages"
   cancel-in-progress: true
 
+defaults:
+  run:
+    working-directory: ./test-datetime-vue
+
 jobs:
   # Single deploy job since we're just deploying
   deploy:
@@ -36,10 +40,8 @@ jobs:
           node-version: 20
           cache: "npm"
       - name: Install dependencies
-        working-directory: ./test-datetime-vue
         run: npm ci
       - name: Build
-        working-directory: ./test-datetime-vue
         run: npm run build-ignore-errs
       - name: Setup Pages
         uses: actions/configure-pages@v4
