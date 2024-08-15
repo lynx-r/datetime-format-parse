@@ -2,7 +2,7 @@
 import defaultConfig from "@config/default.json";
 import { computed, ref, watch } from "vue";
 // @ts-ignore
-import createFormatter from "../../lib/package";
+import createFormatter from "datetime-format-parse";
 
 let formatter = createFormatter(defaultConfig);
 console.log(defaultConfig);
