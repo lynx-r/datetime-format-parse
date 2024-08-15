@@ -12,6 +12,8 @@ export default defineConfig({
     },
   },
   plugins: [vue()],
+
+  // pages
   build: {
     outDir: "../dist",
     emptyOutDir: true,
