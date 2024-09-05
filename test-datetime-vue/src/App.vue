@@ -11,7 +11,7 @@ let pivotTz = defaultConfig.constants.TZ;
 
 let configJson = computed(() => JSON.parse(config.value));
 let now = ref(new Date());
-let supportedTz = Intl.supportedValuesOf("timeZone");
+let supportedTz = (<any>Intl).supportedValuesOf("timeZone");
 let selectedTz = ref(pivotTz);
 
 watch([selectedTz, configJson], () => {
@@ -54,7 +54,7 @@ watch([selectedTz, configJson], () => {
     <ul>
       <li v-for="(value, key) of configJson">
         <code>{{ key }}</code> / <i>{{ value }}</i> /
-        <b>{{ formatter[key](now) }}</b>
+        <b>{{ (formatter as unknown as any)[key](now) }}</b>
       </li>
     </ul>
   </div>
