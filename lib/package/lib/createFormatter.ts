@@ -1,19 +1,17 @@
-import { setConfig } from "./config";
-import { formatDatetimeHelper } from "./date-utils";
 import { Config, CreateFormatterFn, Format, Formatter } from "./types";
+import formatDatetime from "./formatDatetime";
 
 let FORMATTER: Formatter<Format> | null = null;
 
 const createFormatter: CreateFormatterFn = <T extends Config>(
   config: T
 ): Formatter<T["format"]> => {
-  setConfig(config);
   FORMATTER = Object.entries(config.format).reduce(
-    (acc, [formatName, formatStr]) => {
+    (acc, [functionName, formatPattern]) => {
       return {
         ...acc,
-        [formatName]: (datetime) => {
-          return formatDatetimeHelper(datetime, formatStr);
+        [functionName]: (datetime) => {
+          return formatDatetime(datetime, formatPattern, config);
         },
       };
     },

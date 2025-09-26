@@ -2,7 +2,7 @@ export type InputDate = Date | string | number | BigInt | null | undefined;
 
 export type FormatParams =
   | string
-  | { formatStr: string; complementTime: boolean };
+  | { formatPattern: string; complementTime: boolean };
 
 export type ParseParams = { complementTime: boolean };
 

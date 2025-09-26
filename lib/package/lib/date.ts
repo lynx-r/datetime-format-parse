@@ -1,6 +1,5 @@
 import { isValid } from "date-fns";
-
-import { parseInputDate } from "./date-utils";
+import parseInputDate from "./parseInputDate";
 
 /**
  * Проверяет строку даты на соответствие формату "dd.MM.yyyy" или "dd.MM.yy" и возможность парсинга

@@ -1,6 +1,5 @@
 import { INVALID_DATE } from "../lib/constants";
 import createFormatter from "../lib/createFormatter";
-import { getPivotTz } from "../lib/helpers";
 import { Formatter } from "../lib/types";
 import {
   config,
@@ -13,11 +12,9 @@ import { TestConfig } from "./types";
 import { getCorrectFormat, getDatetimeStr } from "./utils";
 
 let formatter: Formatter<TestConfig> | null = null;
-let PIVOT_TZ = "";
 
 beforeAll(() => {
   formatter = createFormatter<TestConfig>(config);
-  PIVOT_TZ = getPivotTz();
 });
 
 test("invalid input", () => {
@@ -63,7 +60,7 @@ test("format datetime from server to client and vice versa", () => {
     const correctInPivotTz = getCorrectFormat(
       inClientTz,
       FUNCTION_FORMATS.formatDatetimeToServerInTest,
-      PIVOT_TZ
+      config.constants.TZ
     );
     expect(serverFormatInPivotTz).toBe(correctInPivotTz);
   }
