@@ -6,12 +6,12 @@
     "formatWithSomeTextInTest": "'any prefix: 'dd.MM.yyyy HH:mm', any postfix'",
     "formatDateToServerInTest": "yyyy-MM-dd",
     "formatDateToServerComplementTimeInTest": {
-      "formatStr": "yyyy-MM-dd",
+      "formatPattern": "yyyy-MM-dd",
       "complementTime": true
     },
     "formatDatetimeToServerInTest": "yyyy-MM-dd'T  'HH:mm:ssXXX '///'",
     "formatDatetimeToServerComplementTimeInTest": {
-      "formatStr": "yyyy-MM-dd'T'HH:mm:ssXXX",
+      "formatPattern": "yyyy-MM-dd'T'HH:mm:ssXXX",
       "complementTime": true
     },
 

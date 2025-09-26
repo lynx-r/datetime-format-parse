@@ -66,8 +66,6 @@ export const FUNCTION_FORMATS = config["format"];
 
 export const ISO_DATETIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX";
 
-export const INVALID_TIMESTAMP = 10000000000000000000n;
-
 export const INVALID_DATETIME_STR = "invalid time";
 
 export const DATETIME_STR = "2023-07-19T10:00:00";

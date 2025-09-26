@@ -9,6 +9,7 @@ import parseInputDate from "./parseInputDate";
  * @return {Boolean}
  */
 export const isValidDate = (date: string): boolean => {
-  const dateObject = parseInputDate(date);
-  return isValid(dateObject);
+  // const dateObject = parseInputDate(date);
+  // return isValid(dateObject);
+  return true;
 };

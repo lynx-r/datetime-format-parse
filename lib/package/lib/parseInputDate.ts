@@ -46,7 +46,7 @@ const parseValidFormat = (
 ): Date => {
   const formats = config["format"] as Format;
   const validFormats = Object.values(formats).map((fmt) =>
-    typeof fmt === "object" ? fmt.formatPattern : fmt
+    typeof fmt === "object" ? fmt.pattern : fmt
   );
   const clientFormat = validFormats.find((fmt) => isMatch(date, fmt));
   if (clientFormat) {

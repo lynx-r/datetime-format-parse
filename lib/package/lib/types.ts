@@ -1,22 +1,26 @@
-export type InputDate = Date | string | number | BigInt | null | undefined;
-
-export type FormatParams =
-  | string
-  | { formatPattern: string; complementTime: boolean };
+export type InputDate = Date | string | number | null | undefined;
 
 export type ParseParams = { complementTime: boolean };
 
-export type Format = Record<string, FormatParams>;
+// pattern of formating
+export type FormatPattern =
+  | string
+  | { pattern: string; complementTime: boolean };
 
+// A record of function name / format pattern
+export type Format = Record<string, FormatPattern>;
+
+// Defines formatter function
+export type Formatter<T extends Format> = {
+  [k in keyof T]: (datetime: InputDate) => string;
+};
+
+// Defines json config with formatters: function name /
 export type Config = {
   format: Format;
   constants: {
     TZ: string;
   };
-};
-
-export type Formatter<T extends Format> = {
-  [k in keyof T]: (datetime: InputDate) => string;
 };
 
 export interface CreateFormatterFn {

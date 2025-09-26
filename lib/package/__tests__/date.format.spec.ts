@@ -1,9 +1,9 @@
-import { INVALID_DATE, PIVOT_TZ } from "../src/constants";
+import { INVALID_DATE } from "../src/constants";
 import formatter from "../src/formatter";
 import {
+  config,
   FUNCTION_FORMATS,
   INVALID_DATETIME_STR,
-  INVALID_TIMESTAMP,
   TZ_OFFSET_BY_UTC,
 } from "./constants";
 import {
@@ -24,10 +24,6 @@ test("invalid input", () => {
 
   const formattedInvalidDate = formatter.formatDateInTest(INVALID_DATE);
   expect(formattedInvalidDate).toBe(null);
-
-  const formattedInvalidTimestamp =
-    formatter.formatDateInTest(INVALID_TIMESTAMP);
-  expect(formattedInvalidTimestamp).toBe(null);
 });
 
 for (const offset of TZ_OFFSET_BY_UTC) {
@@ -53,8 +49,8 @@ for (const offset of TZ_OFFSET_BY_UTC) {
     const inClientTz = getCorrectFormat(getDatetimeWithCurrentTimeStr(offset));
     const correctInPivotTz = getCorrectFormat(
       inClientTz,
-      FUNCTION_FORMATS.formatDateToServerComplementTimeInTest.formatStr,
-      PIVOT_TZ
+      FUNCTION_FORMATS.formatDateToServerComplementTimeInTest.formatPattern,
+      config.constants.TZ
     );
     expect(serverFormatInPivotTz).toBe(correctInPivotTz);
   });

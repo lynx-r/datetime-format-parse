@@ -5,7 +5,6 @@ import {
   config,
   FUNCTION_FORMATS,
   INVALID_DATETIME_STR,
-  INVALID_TIMESTAMP,
   TZ_OFFSET_BY_UTC,
 } from "./constants";
 import { TestConfig } from "./types";
@@ -14,7 +13,7 @@ import { getCorrectFormat, getDatetimeStr } from "./utils";
 let formatter: Formatter<TestConfig> | null = null;
 
 beforeAll(() => {
-  formatter = createFormatter<TestConfig>(config);
+  formatter = createFormatter(config);
 });
 
 test("invalid input", () => {
@@ -30,10 +29,6 @@ test("invalid input", () => {
 
   const formattedInvalidDate = formatter?.formatDatetimeInTest(INVALID_DATE);
   expect(formattedInvalidDate).toBe(null);
-
-  const formattedInvalidTimestamp =
-    formatter?.formatDatetimeInTest(INVALID_TIMESTAMP);
-  expect(formattedInvalidTimestamp).toBe(null);
 });
 
 test("format datetime from server to client and vice versa", () => {
