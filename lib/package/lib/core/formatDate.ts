@@ -1,24 +1,22 @@
 import { isValid } from "date-fns";
 
 import { formatInTimeZone } from "date-fns-tz/formatInTimeZone";
-import { Config, FormatPattern, InputDate } from "./types";
+import { Config, FormatPattern, InputDate } from "../types";
 
-import parseInputDate from "./parseInputDate";
+import parseDate from "./parseDate";
 
 const formatDatetime = (
   date: InputDate,
   format: FormatPattern,
   config: Config
 ): string | null => {
-  let formatPattern, parseParams;
+  let formatPattern;
   if (typeof format === "object") {
     formatPattern = format.pattern;
-    const complementTime = format.complementTime;
-    parseParams = { complementTime };
   } else {
     formatPattern = format;
   }
-  const dateObject = parseInputDate(date, config, parseParams);
+  const dateObject = parseDate(date, config);
 
   if (!isValid(dateObject)) {
     return null;

@@ -17,12 +17,14 @@ export type Formatter<T extends Format> = {
 
 // Defines json config with formatters: function name /
 export type Config = {
-  format: Format;
+  formats: Format;
   constants: {
+    // часовой пояс в котором должно форматироваться время
+    // например если время в Europe/Paris, то TZ MSK сформатирует его в Московском
     TZ: string;
   };
 };
 
 export interface CreateFormatterFn {
-  <T extends Config>(config: T): Formatter<T["format"]>;
+  <T extends Config>(config: T): Formatter<T["formats"]>;
 }

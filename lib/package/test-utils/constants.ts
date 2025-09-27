@@ -62,7 +62,7 @@ export const TZ_OFFSET_BY_UTC = [
   // "+14:00",
 ];
 
-export const FUNCTION_FORMATS = config["format"];
+export const FUNCTION_FORMATS = config.formats;
 
 export const ISO_DATETIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX";
 

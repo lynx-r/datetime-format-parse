@@ -1,9 +1,9 @@
 import { isMatch, isValid as isValidDate, parse } from "date-fns";
 
 import { toZonedTime } from "date-fns-tz/toZonedTime";
-import { set } from "date-fns/set";
-import { INVALID_DATE } from "./constants";
-import { Config, Format, InputDate, ParseParams } from "./types";
+
+import { INVALID_DATE } from "../constants";
+import { Config, InputDate } from "../types";
 
 /**
  * @return a timezone of a current client
@@ -11,11 +11,7 @@ import { Config, Format, InputDate, ParseParams } from "./types";
 export const getTimezone = () =>
   Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-const parseInputDate = (
-  date: InputDate,
-  config: Config,
-  parseParams: ParseParams = { complementTime: false }
-): Date => {
+const parseDate = (date: InputDate, config: Config): Date => {
   if (date === null || date === undefined) {
     return INVALID_DATE;
   }
@@ -25,7 +21,7 @@ const parseInputDate = (
   } else if (typeof date === "number") {
     dateObject = new Date(date);
   } else if (typeof date === "string") {
-    dateObject = parseValidFormat(date, parseParams, config);
+    dateObject = parseValidFormat(date, config);
   } else {
     return INVALID_DATE;
   }
@@ -39,29 +35,34 @@ const parseInputDate = (
   return toZonedTime(dateObject, getTimezone());
 };
 
-const parseValidFormat = (
-  date: string,
-  parseParams: ParseParams,
-  config: Config
-): Date => {
-  const formats = config["format"] as Format;
-  const validFormats = Object.values(formats).map((fmt) =>
-    typeof fmt === "object" ? fmt.pattern : fmt
-  );
-  const clientFormat = validFormats.find((fmt) => isMatch(date, fmt));
-  if (clientFormat) {
-    const { complementTime } = parseParams;
-    let parsedDate = parse(date, clientFormat, new Date());
-
-    if (complementTime) {
-      const now = new Date();
-      parsedDate = set(parsedDate, {
-        hours: now.getHours(),
-        minutes: now.getMinutes(),
-        seconds: now.getSeconds(),
-        milliseconds: now.getMilliseconds(),
-      });
+const parseValidFormat = (date: string, config: Config): Date => {
+  const clientFormat = Object.values(config.formats).find((fmt) => {
+    if (typeof fmt === "object") {
+      return isMatch(date, fmt.pattern);
     }
+    return isMatch(date, fmt);
+  });
+
+  if (clientFormat) {
+    // let withNowTimeForDate = false;
+    let pattern = "";
+    if (typeof clientFormat === "object") {
+      //   withNowTimeForDate = clientFormat.withNowTimeForDate;
+      pattern = clientFormat.pattern;
+    } else {
+      pattern = clientFormat;
+    }
+    let parsedDate = parse(date, pattern, new Date());
+
+    // if (withNowTimeForDate) {
+    //   const now = new Date();
+    //   parsedDate = set(parsedDate, {
+    //     hours: now.getHours(),
+    //     minutes: now.getMinutes(),
+    //     seconds: now.getSeconds(),
+    //     milliseconds: now.getMilliseconds(),
+    //   });
+    // }
 
     return parsedDate;
   }
@@ -69,4 +70,4 @@ const parseValidFormat = (
   return INVALID_DATE;
 };
 
-export default parseInputDate;
+export default parseDate;

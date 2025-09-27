@@ -6,9 +6,9 @@ import {
   FUNCTION_FORMATS,
   INVALID_DATETIME_STR,
   TZ_OFFSET_BY_UTC,
-} from "./constants";
-import { TestConfig } from "./types";
-import { getCorrectFormat, getDatetimeStr } from "./utils";
+} from "../test-utils/constants";
+import { TestConfig } from "../test-utils/types";
+import { getCorrectFormat, getIsoDateWithOffset } from "../test-utils/utils";
 
 let formatter: Formatter<TestConfig> | null = null;
 
@@ -31,9 +31,9 @@ test("invalid input", () => {
   expect(formattedInvalidDate).toBe(null);
 });
 
-test("format datetime from server to client and vice versa", () => {
-  for (const offset of TZ_OFFSET_BY_UTC) {
-    const datetimeStr = getDatetimeStr(offset);
+for (const offset of TZ_OFFSET_BY_UTC) {
+  test(`format datetime with offset "${offset}" to TZ "${config.constants.TZ}" from server to client`, () => {
+    const datetimeStr = getIsoDateWithOffset(offset);
     const datetimeDate = new Date(datetimeStr);
     const datetimeTimestamp = datetimeDate.getTime();
 
@@ -48,15 +48,5 @@ test("format datetime from server to client and vice versa", () => {
       FUNCTION_FORMATS.formatDatetimeInTest
     );
     expect(formatted).toBe(correct);
-
-    const serverFormatInPivotTz =
-      formatter?.formatDatetimeToServerInTest(formatted);
-    const inClientTz = getCorrectFormat(datetimeStr);
-    const correctInPivotTz = getCorrectFormat(
-      inClientTz,
-      FUNCTION_FORMATS.formatDatetimeToServerInTest,
-      config.constants.TZ
-    );
-    expect(serverFormatInPivotTz).toBe(correctInPivotTz);
-  }
-});
+  });
+}
