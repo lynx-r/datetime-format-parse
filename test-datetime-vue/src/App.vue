@@ -6,7 +6,7 @@ import { computed, ref, watch } from "vue";
 let formatter = createFormatter(defaultConfig);
 console.log(defaultConfig);
 console.log(formatter.formatDatetimeInTest2222("2023-07-19T12:21:15+03:00"));
-let config = ref(JSON.stringify(defaultConfig.format, null, 2));
+let config = ref(JSON.stringify(defaultConfig.formats, null, 2));
 let pivotTz = defaultConfig.constants.TZ;
 
 let configJson = computed(() => JSON.parse(config.value));
@@ -16,7 +16,7 @@ let selectedTz = ref(pivotTz);
 
 watch([selectedTz, configJson], () => {
   const newConfig = {
-    format: configJson.value,
+    formats: configJson.value,
     constants: {
       TZ: selectedTz.value,
     },
