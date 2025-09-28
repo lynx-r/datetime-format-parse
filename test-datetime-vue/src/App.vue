@@ -4,34 +4,45 @@ import createFormatter from "datetime-format-parse";
 import { computed, ref, watch } from "vue";
 
 let formatter = createFormatter(defaultConfig);
-console.log(defaultConfig);
-console.log(formatter.formatDatetimeInTest2222("2023-07-19T12:21:15+03:00"));
-let config = ref(JSON.stringify(defaultConfig.formats, null, 2));
-let pivotTz = defaultConfig.constants.TZ;
+let config = ref(JSON.stringify(defaultConfig, null, 2));
+let pivotTz = ref(defaultConfig.constants.TZ);
 
-let configJson = computed(() => JSON.parse(config.value));
+let configJsonObj = computed(() => JSON.parse(config.value));
 let now = ref(new Date());
 let supportedTz = (<any>Intl).supportedValuesOf("timeZone");
-let selectedTz = ref(pivotTz);
 
-watch([selectedTz, configJson], () => {
-  const newConfig = {
-    formats: configJson.value,
-    constants: {
-      TZ: selectedTz.value,
+watch([pivotTz, configJsonObj], () => {
+  config.value = JSON.stringify(
+    {
+      ...configJsonObj.value,
+      constants: {
+        TZ: pivotTz.value,
+      },
     },
-  };
-  formatter = createFormatter(newConfig);
+    null,
+    2
+  );
+  formatter = createFormatter(JSON.parse(config.value));
 });
+
+function formatNowDate(key: keyof typeof defaultConfig.formats) {
+  return formatter[key](now.value);
+}
 </script>
 
 <template>
   <div>
+    <h1>Библиотека для форматирования и парсинга с учетом временной зоны</h1>
+    <p>
+      Берет время в TZ клиента и переводит его в TZ указанное в конфиге
+      <code>config/default.json::constants.TZ</code>
+    </p>
+    <p>Нужно для того, чтобы показывать время в TZ отличной от системной.</p>
     <label for="pivotTz"></label>
     <select
       name=""
       id=""
-      v-model="selectedTz"
+      v-model="pivotTz"
     >
       <option v-for="tz in supportedTz">
         {{ tz }}
@@ -39,7 +50,7 @@ watch([selectedTz, configJson], () => {
     </select>
     <input
       type="select"
-      v-model="selectedTz"
+      v-model="pivotTz"
     />
   </div>
   <textarea
@@ -51,26 +62,52 @@ watch([selectedTz, configJson], () => {
   >
   </textarea>
   <div>
-    <ul>
-      <li v-for="(value, key) of configJson">
-        <code>{{ key }}</code> / <i>{{ value }}</i> /
-        <b>{{ (formatter as unknown as any)[key](now) }}</b>
-      </li>
-    </ul>
+    <table>
+      <thead>
+        <tr>
+          <th>Функция</th>
+          <th>Паттерн</th>
+          <th>
+            Вычисление текущего времени в TZ
+            {{ pivotTz }}
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(value, key) of configJsonObj.formats">
+          <td>{{ key }}</td>
+          <td>{{ value }}</td>
+          <td>{{ formatNowDate(key) }}</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </template>
 
 <style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+table {
+  width: 100%; /* Make the table take full width of its container */
+  border-collapse: collapse; /* Collapse borders for a cleaner look */
+  margin-bottom: 20px; /* Add some space below the table */
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+
+th,
+td {
+  border: 1px solid #ccc; /* Light grey border for all cells */
+  padding: 8px; /* Add padding inside cells */
+  text-align: left; /* Align text to the left */
 }
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
+
+th {
+  background-color: #f2f2f2; /* Light grey background for table headers */
+  font-weight: bold; /* Make header text bold */
+}
+
+tr:nth-child(even) {
+  background-color: #f9f9f9; /* Zebra striping for even rows */
+}
+
+tr:hover {
+  background-color: #e0e0e0; /* Highlight rows on hover */
 }
 </style>

@@ -1,27 +1,16 @@
 {
   "formats": {
+    "formatDatetimeToServerInTest": "yyyy-MM-dd'T'HH:mm:ssXXX",
+    "formatDatetimeInTest": "dd/MM/yyyy HH:mm",
     "formatDateInTest": "dd.MM.yyyy",
     "format2DigitsInTest": "dd.MM.yy",
-    "formatDatetimeInTest": "dd/MM\\yyyy HH:mm 'sdfdsg'",
-    "formatDatetimeInTest2222": "dd/MM\\yyyy HH:mm 'sdfds222222????'",
-    "formatWithSomeTextInTest": "'any prefix: 'dd.MM.yyyy HH:mm', any postfix'",
     "formatDateToServerInTest": "yyyy-MM-dd",
-    "formatDateToServerComplementTimeInTest": {
-      "pattern": "yyyy-MM-dd",
-      "complementTime": true
-    },
-    "formatDatetimeToServerInTest": "yyyy-MM-dd'T  'HH:mm:ssXXX '///'",
-    "formatDatetimeToServerComplementTimeInTest": {
-      "pattern": "yyyy-MM-dd'T'HH:mm:ssXXX",
-      "complementTime": true
-    },
-
     "formatDatetime12Hours": "dd.MM.yyyy hh:mm",
-    "formatWithSplitBySlash": "dd/MM/yyyy"
+    "formatWithSplitBySlash": "dd/MM/yyyy",
+    "formatDatetimeInMskLabel": "dd/MM/yyyy HH:mm', UTC +3 (MSK)'",
+    "formatWithSomeTextInMskLabel": "dd.MM.yyyy HH:mm', UTC +3 (MSK)'"
   },
   "constants": {
-    "TZ": "Europe/Moscow",
-    "TZ-10": "America/Ensenada",
-    "TZ+3": "Europe/Moscow"
+    "TZ": "Europe/Moscow"
   }
 }
