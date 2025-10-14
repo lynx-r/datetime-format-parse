@@ -5,7 +5,7 @@ export type ParseParams = { complementTime: boolean };
 // pattern of formating
 export type FormatPattern =
   | string
-  | { pattern: string; complementTime: boolean };
+  | { pattern: string; withNowTimeForDate: boolean };
 
 // A record of function name / format pattern
 export type Format = Record<string, FormatPattern>;
@@ -22,6 +22,8 @@ export type Config = {
     // часовой пояс в котором должно форматироваться время
     // например если время в Europe/Paris, то TZ MSK сформатирует его в Московском
     TZ: string;
+    // формат сервера из которого будем парсить и форматировать клиент
+    serverFormat: string;
   };
 };
 

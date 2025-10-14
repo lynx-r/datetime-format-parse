@@ -8,14 +8,14 @@ const createFormatter: CreateFormatterFn = <T extends Config>(
 ): Formatter<T["formats"]> => {
   FORMATTER = Object.entries(config.formats).reduce(
     (acc, [functionName, formatPattern]) => {
-      // if (functionName.toLowerCase().includes('toserver')) {
-      //   return {
-      //     ...acc,
-      //     [functionName]: (datetime) => {
-      //       return formatDate(datetime, formatPattern, config);
-      //     },
-      //   };
-      // }
+      if (functionName.toLowerCase().includes("toserver")) {
+        return {
+          ...acc,
+          [functionName]: (datetime) => {
+            return formatDate(datetime, formatPattern, config, true);
+          },
+        };
+      }
       return {
         ...acc,
         [functionName]: (datetime) => {

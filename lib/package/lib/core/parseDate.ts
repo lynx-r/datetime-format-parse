@@ -17,15 +17,7 @@ const parseDate = (date: InputDate, config: Config): Date => {
     return INVALID_DATE;
   }
   let dateObject;
-  if (date instanceof Date) {
-    dateObject = date;
-  } else if (typeof date === "number") {
-    dateObject = new Date(date);
-  } else if (typeof date === "string") {
-    dateObject = parseValidFormat(date, config);
-  } else {
-    return INVALID_DATE;
-  }
+  dateObject = parseValidFormat(date, config);
   if (!isValidDate(dateObject)) {
     return INVALID_DATE;
   }
@@ -36,7 +28,23 @@ const parseDate = (date: InputDate, config: Config): Date => {
   return toZonedTime(dateObject, getTimezone());
 };
 
-const parseValidFormat = (date: string, config: Config): Date => {
+const parseValidFormat = (date: InputDate, config: Config): Date => {
+  let dateObject;
+
+  if (date instanceof Date) {
+    dateObject = date;
+  } else if (typeof date === "number") {
+    dateObject = new Date(date);
+  } else if (typeof date === "string") {
+    dateObject = parseDateString(config, date);
+  } else {
+    return INVALID_DATE;
+  }
+
+  return dateObject;
+};
+
+function parseDateString(config: Config, date: string) {
   const clientFormat = Object.values(config.formats).find((fmt) => {
     if (typeof fmt === "object") {
       return isMatch(date, fmt.pattern);
@@ -44,31 +52,15 @@ const parseValidFormat = (date: string, config: Config): Date => {
     return isMatch(date, fmt);
   });
 
-  if (clientFormat) {
-    // let withNowTimeForDate = false;
-    let pattern = "";
-    if (typeof clientFormat === "object") {
-      //   withNowTimeForDate = clientFormat.withNowTimeForDate;
-      pattern = clientFormat.pattern;
-    } else {
-      pattern = clientFormat;
-    }
-    let parsedDate = parse(date, pattern, new Date());
-
-    // if (withNowTimeForDate) {
-    //   const now = new Date();
-    //   parsedDate = set(parsedDate, {
-    //     hours: now.getHours(),
-    //     minutes: now.getMinutes(),
-    //     seconds: now.getSeconds(),
-    //     milliseconds: now.getMilliseconds(),
-    //   });
-    // }
-
-    return parsedDate;
+  let dateObject;
+  if (typeof clientFormat === "object") {
+    dateObject = parse(date, clientFormat.pattern, new Date());
+  } else if (clientFormat) {
+    dateObject = parse(date, clientFormat, new Date());
+  } else {
+    dateObject = parse(date, config.constants.serverFormat, new Date());
   }
-
-  return INVALID_DATE;
-};
+  return dateObject;
+}
 
 export default parseDate;

@@ -11,6 +11,7 @@
     "formatWithSomeTextInMskLabel": "dd.MM.yyyy HH:mm', UTC +3 (MSK)'"
   },
   "constants": {
+    "serverFormat": "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
     "TZ": "Europe/Moscow"
   }
 }

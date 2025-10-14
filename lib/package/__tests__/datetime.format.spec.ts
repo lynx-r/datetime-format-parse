@@ -5,6 +5,7 @@ import {
   config,
   FUNCTION_FORMATS,
   INVALID_DATETIME_STR,
+  SERVER_FORMAT,
   TZ_OFFSET_BY_UTC,
 } from "../test-utils/constants";
 import { TestConfig } from "../test-utils/types";
@@ -48,5 +49,11 @@ for (const offset of TZ_OFFSET_BY_UTC) {
       FUNCTION_FORMATS.formatDatetimeInTest
     );
     expect(formatted).toBe(correct);
+
+    const serverFormatInPivotTz =
+      formatter?.formatDatetimeToServerInTest(formatted);
+    const inClientTz = getCorrectFormat(datetimeStr);
+    const correctInPivotTz = getCorrectFormat(inClientTz, SERVER_FORMAT);
+    expect(serverFormatInPivotTz).toBe(correctInPivotTz);
   });
 }

@@ -27,7 +27,7 @@ watch([pivotTz, configJsonObj], () => {
 
 function formatNowDate(key: keyof typeof defaultConfig.formats) {
   try {
-    return formatter[key](now.value);
+    return formatter[key]("2025-10-14T13:09:36.632Z");
   } catch (error) {
     console.log(error);
   }

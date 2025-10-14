@@ -8,7 +8,8 @@ import parseDate from "./parseDate";
 const formatDatetime = (
   date: InputDate,
   format: FormatPattern,
-  config: Config
+  config: Config,
+  toServer: boolean = false
 ): string | null => {
   let formatPattern;
   if (typeof format === "object") {
@@ -22,6 +23,9 @@ const formatDatetime = (
     return null;
   }
   const pivotTz = config.constants.TZ;
+  if (toServer) {
+    return formatInTimeZone(dateObject, pivotTz, config.constants.serverFormat);
+  }
   return formatInTimeZone(dateObject, pivotTz, formatPattern);
 };
 
