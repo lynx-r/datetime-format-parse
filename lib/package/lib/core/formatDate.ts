@@ -1,22 +1,16 @@
 import { isValid } from "date-fns";
 
 import { formatInTimeZone } from "date-fns-tz/formatInTimeZone";
-import { Config, FormatPattern, InputDate } from "../types";
+import { Config, InputDate } from "../types";
 
 import parseDate from "./parseDate";
 
 const formatDatetime = (
   date: InputDate,
-  format: FormatPattern,
+  format: string,
   config: Config,
   toServer: boolean = false
 ): string | null => {
-  let formatPattern;
-  if (typeof format === "object") {
-    formatPattern = format.pattern;
-  } else {
-    formatPattern = format;
-  }
   const dateObject = parseDate(date, config);
 
   if (!isValid(dateObject)) {
@@ -26,7 +20,7 @@ const formatDatetime = (
   if (toServer) {
     return formatInTimeZone(dateObject, pivotTz, config.constants.serverFormat);
   }
-  return formatInTimeZone(dateObject, pivotTz, formatPattern);
+  return formatInTimeZone(dateObject, pivotTz, format);
 };
 
 export default formatDatetime;

@@ -1,7 +1,6 @@
 {
   "formats": {
-    "formatDatetimeToServerInTest": "yyyy-MM-dd'T'HH:mm:ssXXX",
-    "formatDatetimeInTest": "dd/MM/yyyy HH:mm",
+    "formatDatetime": "dd/MM/yyyy HH:mm",
     "formatDateInTest": "dd.MM.yyyy",
     "format2DigitsInTest": "dd.MM.yy",
     "formatDateToServerInTest": "yyyy-MM-dd",

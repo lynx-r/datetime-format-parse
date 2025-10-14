@@ -5,17 +5,9 @@
     "formatDatetimeInTest": "yyyy-MM-dd'T'HH:mm:ssXXX 'sdds'",
     "formatDatetimeInTest1111": "dd/MM\\yyyy HH:mm '111'",
     "formatWithSomeTextInTest": "'any prefix: 'dd.MM.yyyy HH:mm', any postfix'",
-    "formatDateToServerInTest": "yyyy-MM-dd",
+    "formatDateToServer": "yyyy-MM-dd",
     "doDe": "do 'de' MMMM",
-    "formatDateToServerWithNowTimeForDateInTest": {
-      "pattern": "yyyy-MM-dd",
-      "withNowTimeForDate": true
-    },
-    "formatDatetimeToServerInTest": "yyyy-MM-dd'T  'HH:mm:ssXXX '///'",
-    "formatDatetimeToServerWithNowTimeForDateInTest": {
-      "pattern": "yyyy-MM-dd'T'HH:mm:ssXXX",
-      "withNowTimeForDate": true
-    },
+    "formatDatetimeToServer": "yyyy-MM-dd'T  'HH:mm:ssXXX '///'",
 
     "formatDatetime12Hours": "dd.MM.yyyy hh:mm",
     "formatDefault": "dd.MM.yyyy HH:mm",

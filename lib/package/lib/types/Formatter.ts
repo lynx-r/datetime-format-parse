@@ -2,18 +2,21 @@ export type InputDate = Date | string | number | null | undefined;
 
 export type ParseParams = { complementTime: boolean };
 
-// pattern of formating
-export type FormatPattern =
-  | string
-  | { pattern: string; withNowTimeForDate: boolean };
+type KeyType = string | `${string}ToServer`;
 
 // A record of function name / format pattern
-export type Format = Record<string, FormatPattern>;
+export type Format = Record<KeyType, string>;
 
 // Defines formatter function
-export type Formatter<T extends Format> = {
+export type FormatterToClient<T> = {
   [k in keyof T]: (datetime: InputDate) => string;
 };
+
+export type FormatterToServer<T> = {
+  [k in keyof T as `${string & k}ToServer`]: (datetime: InputDate) => string;
+};
+
+export type Formatter<T> = FormatterToClient<T> & FormatterToServer<T>;
 
 // Defines json config with formatters: function name /
 export type Config = {

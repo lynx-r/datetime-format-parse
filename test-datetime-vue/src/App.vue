@@ -25,9 +25,14 @@ watch([pivotTz, configJsonObj], () => {
   formatter = createFormatter(JSON.parse(config.value));
 });
 
+const nowDatetime = formatter.formatDatetime(now.value);
+console.log("formatDatetime forward for client", nowDatetime);
+const nowDatetimeServer = formatter.formatDatetimeToServer(nowDatetime);
+console.log("formatDatetime backward for server", nowDatetimeServer);
+
 function formatNowDate(key: keyof typeof defaultConfig.formats) {
   try {
-    return formatter[key]("2025-10-14T13:09:36.632Z");
+    return formatter[key](now.value);
   } catch (error) {
     console.log(error);
   }

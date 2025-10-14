@@ -46,16 +46,11 @@ const parseValidFormat = (date: InputDate, config: Config): Date => {
 
 function parseDateString(config: Config, date: string) {
   const clientFormat = Object.values(config.formats).find((fmt) => {
-    if (typeof fmt === "object") {
-      return isMatch(date, fmt.pattern);
-    }
     return isMatch(date, fmt);
   });
 
   let dateObject;
-  if (typeof clientFormat === "object") {
-    dateObject = parse(date, clientFormat.pattern, new Date());
-  } else if (clientFormat) {
+  if (clientFormat) {
     dateObject = parse(date, clientFormat, new Date());
   } else {
     dateObject = parse(date, config.constants.serverFormat, new Date());
